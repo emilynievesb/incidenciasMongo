@@ -40,5 +40,58 @@ class Equipo {
       }
     }
   }
+
+  async obtenerEquipos() {
+    try {
+      this.session = await startTransaction();
+      const connection = await this.connect();
+      const resultado = await connection
+        .aggregate([
+          {
+            $lookup: {
+              from: "tipos_equipos",
+              localField: "id_tipo_equipo",
+              foreignField: "id_tipo_equipo",
+              as: "tipo_equipo",
+            },
+          },
+          {
+            $lookup: {
+              from: "salas",
+              localField: "id_sala",
+              foreignField: "id_sala",
+              as: "sala",
+            },
+          },
+          {
+            $unwind: "$tipo_equipo",
+          },
+          {
+            $unwind: "$sala",
+          },
+          {
+            $project: {
+              _id: 0,
+              id_equipo: 1,
+              serial_equipo: 1,
+              tipo_equipo: "$tipo_equipo.nombre_equipo",
+              sala: "$sala.nombre_sala",
+            },
+          },
+        ])
+        .toArray();
+      await this.session.commitTransaction();
+      return resultado;
+    } catch (error) {
+      if (this.session) {
+        await this.session.abortTransaction();
+      }
+      throw error;
+    } finally {
+      if (this.session) {
+        this.session.endSession();
+      }
+    }
+  }
 }
 export { Equipo };
