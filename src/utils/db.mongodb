@@ -1,0 +1,756 @@
+use("db_incidencias_campus");
+// Coleccion de autoincrementables
+db.createCollection("counters");
+db.counters.insertMany([
+  { _id: "categoriasId", sequence_value: 0 },
+  { _id: "tipoId", sequence_value: 0 },
+  { _id: "areasId", sequence_value: 0 },
+  { _id: "salasId", sequence_value: 0 },
+  { _id: "tipo_equipoId", sequence_value: 0 },
+  { _id: "equiposId", sequence_value: 0 },
+  { _id: "trainersId", sequence_value: 0 },
+  { _id: "incidenciasId", sequence_value: 0 },
+]);
+
+function siguienteId(coleccion) {
+  const sequenceDocument = db.counters.findOneAndUpdate(
+    { _id: `${coleccion}Id` },
+    { $inc: { sequence_value: 1 } },
+    { returnDocument: "after" }
+  );
+  return sequenceDocument.sequence_value;
+}
+
+db.createCollection("areas", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["id_area", "nombre_area"],
+      properties: {
+        id_area: {
+          bsonType: "int",
+          description: "Id del área",
+        },
+        nombre_area: {
+          bsonType: "string",
+          description: "Nombre del área",
+        },
+      },
+    },
+  },
+});
+db.areas.insertMany([
+  { id_area: siguienteId("areas"), nombre_area: "Area Training" },
+  { id_area: siguienteId("areas"), nombre_area: "Area Review 1" },
+  { id_area: siguienteId("areas"), nombre_area: "Area Review 2" },
+]);
+db.createCollection("salas", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["id_sala", "nombre_sala", "id_area"],
+      properties: {
+        id_sala: {
+          bsonType: "int",
+          description: "Id de la sala",
+        },
+        nombre_sala: {
+          bsonType: "string",
+          description: "Nombre de la sala",
+        },
+        id_area: {
+          bsonType: "int",
+          description: "Id del area al que corresponde",
+        },
+      },
+    },
+  },
+});
+db.salas.insertMany([
+  { id_sala: siguienteId("salas"), nombre_sala: "Sputnik", id_area: 1 },
+  { id_sala: siguienteId("salas"), nombre_sala: "Artemis", id_area: 1 },
+  { id_sala: siguienteId("salas"), nombre_sala: "Apolo", id_area: 1 },
+  { id_sala: siguienteId("salas"), nombre_sala: "Skylab", id_area: 1 },
+  { id_sala: siguienteId("salas"), nombre_sala: "Corvus", id_area: 2 },
+  { id_sala: siguienteId("salas"), nombre_sala: "Endor", id_area: 3 },
+]);
+db.createCollection("tipos_incidencias", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["id_tipo_incidencia", "nombre_tipo_incidencia"],
+      properties: {
+        id_tipo_incidencia: {
+          bsonType: "int",
+          description: "Id del tipo de incidencia",
+        },
+        nombre_tipo_incidencia: {
+          bsonType: "string",
+          description: "Nombre tipo de incidencia",
+        },
+      },
+    },
+  },
+});
+db.tipos_incidencias.insertMany([
+  { id_tipo_incidencia: siguienteId("tipo"), nombre_tipo_incidencia: "Leve" },
+  {
+    id_tipo_incidencia: siguienteId("tipo"),
+    nombre_tipo_incidencia: "Moderada",
+  },
+  {
+    id_tipo_incidencia: siguienteId("tipo"),
+    nombre_tipo_incidencia: "Crítica",
+  },
+]);
+db.createCollection("categorias_incidencias", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["id_categoria_incidencia", "nombre_categoria_incidencia"],
+      properties: {
+        id_categoria_incidencia: {
+          bsonType: "int",
+          description: "Id de la categoría de la incidencia",
+        },
+        nombre_categoria_incidencia: {
+          bsonType: "string",
+          description: "Nombre de la categoría de la incidencia",
+        },
+      },
+    },
+  },
+});
+db.categorias_incidencias.insertMany([
+  {
+    id_categoria_incidencia: siguienteId("categorias"),
+    nombre_categoria_incidencia: "Hardware",
+  },
+  {
+    id_categoria_incidencia: siguienteId("categorias"),
+    nombre_categoria_incidencia: "Software",
+  },
+]);
+db.createCollection("tipos_equipos", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["id_tipo_equipo", "nombre_equipo"],
+      properties: {
+        id_tipo_equipo: {
+          bsonType: "int",
+          description: "Id tipo de equipo",
+        },
+        nombre_equipo: {
+          bsonType: "string",
+          description: "Nombre del tipo de equipo",
+        },
+      },
+    },
+  },
+});
+db.tipos_equipos.insertMany([
+  { id_tipo_equipo: siguienteId("tipo_equipo"), nombre_equipo: "Computador" },
+  { id_tipo_equipo: siguienteId("tipo_equipo"), nombre_equipo: "Teclado" },
+  { id_tipo_equipo: siguienteId("tipo_equipo"), nombre_equipo: "Mouse" },
+  { id_tipo_equipo: siguienteId("tipo_equipo"), nombre_equipo: "Diadema" },
+]);
+db.createCollection("equipos", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["id_equipo", "id_tipo_equipo", "serial_equipo", "id_sala"],
+      properties: {
+        id_equipo: {
+          bsonType: "int",
+          description: "Id del equipo",
+        },
+        id_tipo_equipo: {
+          bsonType: "int",
+          description: "Id del tipo de equipo",
+        },
+        serial_equipo: {
+          bsonType: "string",
+          description: "serial del equipo",
+        },
+        id_sala: {
+          bsonType: "int",
+          description: "Id de la sala a donde pertenece",
+        },
+      },
+    },
+  },
+});
+db.equipos.insertMany([
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP001",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP002",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP003",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP004",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP005",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP006",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP007",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP008",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP009",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSP010",
+    id_sala: 1,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR001",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR002",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR003",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR004",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR005",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR006",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR007",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR008",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR009",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAR010",
+    id_sala: 2,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP001",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP002",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP003",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP004",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP005",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP006",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP007",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP008",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP009",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPAP010",
+    id_sala: 3,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK001",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK002",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK003",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK004",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK005",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK006",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK007",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK008",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK009",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPSK010",
+    id_sala: 4,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO001",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO002",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO003",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO004",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO005",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO006",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO007",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO008",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO009",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPCO010",
+    id_sala: 5,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN001",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN002",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN003",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN004",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN005",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN006",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN007",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN008",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN009",
+    id_sala: 6,
+  },
+  {
+    id_equipo: siguienteId("equipos"),
+    id_tipo_equipo: 1,
+    serial_equipo: "CPEN010",
+    id_sala: 6,
+  },
+]);
+db.createCollection("trainers", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [
+        "id_trainer",
+        "nombre_trainer",
+        "email_personal",
+        "email_corporativo",
+        "telefono_movil",
+        "telefono_residencia",
+        "telefono_empresa",
+        "telefono_movil_empresarial",
+      ],
+      properties: {
+        id_trainer: {
+          bsonType: "int",
+          description: "Id del trainer",
+        },
+        nombre_trainer: {
+          bsonType: "string",
+          description: "Nombre del trainer",
+        },
+        email_personal: {
+          bsonType: "string",
+          description: "Email personal del trainer",
+        },
+        email_corporativo: {
+          bsonType: "string",
+          description: "Email corporativo del trainer",
+        },
+        telefono_movil: {
+          bsonType: "int",
+          description: "Telefono del trainer",
+        },
+        telefono_residencia: {
+          bsonType: "int",
+          description: "Telefono de la residencia del trainer",
+        },
+        telefono_empresa: {
+          bsonType: "int",
+          description: "Telefono empresarial del trainer",
+        },
+        telefono_movil_empresarial: {
+          bsonType: "int",
+          description: "Telefono movil empresarial del trainer",
+        },
+      },
+    },
+  },
+});
+db.trainers.insertMany([
+  {
+    id_trainer: siguienteId("trainers"),
+    nombre_trainer: "Miguel",
+    email_personal: "miguel@gmail.com",
+    email_corporativo: "miguel2@gmail.com",
+    telefono_movil: 31111111,
+    telefono_residencia: 622222,
+    telefono_empresa: 6333333,
+    telefono_movil_empresarial: 32222222,
+  },
+  {
+    id_trainer: siguienteId("trainers"),
+    nombre_trainer: "Jholver",
+    email_personal: "jholver@gmail.com",
+    email_corporativo: "jholver2@gmail.com",
+    telefono_movil: 31111111,
+    telefono_residencia: 622222,
+    telefono_empresa: 6333333,
+    telefono_movil_empresarial: 32222222,
+  },
+  {
+    id_trainer: siguienteId("trainers"),
+    nombre_trainer: "Vermen",
+    email_personal: "vermen@gmail.com",
+    email_corporativo: "vermen2@gmail.com",
+    telefono_movil: 31111111,
+    telefono_residencia: 622222,
+    telefono_empresa: 6333333,
+    telefono_movil_empresarial: 32222222,
+  },
+  {
+    id_trainer: siguienteId("trainers"),
+    nombre_trainer: "Roy",
+    email_personal: "roy@gmail.com",
+    email_corporativo: "roy2@gmail.com",
+    telefono_movil: 31111111,
+    telefono_residencia: 622222,
+    telefono_empresa: 6333333,
+    telefono_movil_empresarial: 32222222,
+  },
+  {
+    id_trainer: siguienteId("trainers"),
+    nombre_trainer: "Carlos",
+    email_personal: "carlos@gmail.com",
+    email_corporativo: "carlos2@gmail.com",
+    telefono_movil: 31111111,
+    telefono_residencia: 622222,
+    telefono_empresa: 6333333,
+    telefono_movil_empresarial: 32222222,
+  },
+]);
+db.createCollection("incidencias", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [
+        "id_incidencia",
+        "id_trainer",
+        "id_equipo",
+        "id_categoria_incidencia",
+        "id_tipo_incidencia",
+        "descripcion",
+        "fecha_incidencia",
+      ],
+    },
+  },
+});
+db.insidencias.insertMany([
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 1,
+    id_equipo: 1,
+    id_categoria_incidencia: 1,
+    id_tipo_incidencia: 1,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-10",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 1,
+    id_equipo: 2,
+    id_categoria_incidencia: 1,
+    id_tipo_incidencia: 1,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-10",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 1,
+    id_equipo: 3,
+    id_categoria_incidencia: 2,
+    id_tipo_incidencia: 2,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-11",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 1,
+    id_equipo: 4,
+    id_categoria_incidencia: 2,
+    id_tipo_incidencia: 2,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-11",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 1,
+    id_equipo: 5,
+    id_categoria_incidencia: 2,
+    id_tipo_incidencia: 1,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-12",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 2,
+    id_equipo: 6,
+    id_categoria_incidencia: 1,
+    id_tipo_incidencia: 1,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-12",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 2,
+    id_equipo: 7,
+    id_categoria_incidencia: 1,
+    id_tipo_incidencia: 1,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-13",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 2,
+    id_equipo: 8,
+    id_categoria_incidencia: 2,
+    id_tipo_incidencia: 2,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-14",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 2,
+    id_equipo: 9,
+    id_categoria_incidencia: 2,
+    id_tipo_incidencia: 2,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-14",
+  },
+  {
+    id_incidencia: siguienteId("incidencias"),
+    id_trainer: 2,
+    id_equipo: 10,
+    id_categoria_incidencia: 2,
+    id_tipo_incidencia: 1,
+    descripcion: "Incidencia prueba",
+    fecha_incidencia: "2023-07-14",
+  },
+]);
