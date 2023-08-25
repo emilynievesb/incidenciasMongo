@@ -1,13 +1,13 @@
 import { connect, startTransaction } from "../utils/connect.js";
 class Counters {
+  collection;
   constructor() {}
-
-  async getNewId(coleccion) {
+  async getId() {
     const session = await startTransaction();
     try {
       const countersCollection = await connect("counters");
       const counterDoc = await countersCollection.findOneAndUpdate(
-        { _id: `${coleccion}Id` },
+        { _id: `equiposId` },
         { $inc: { sequence_value: 1 } },
         { session, returnOriginal: false, upsert: true }
       );
