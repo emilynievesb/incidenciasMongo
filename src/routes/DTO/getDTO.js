@@ -1,6 +1,6 @@
 import { object, string, number, date } from "yup";
 
-const postEquipoDTO = async (req, res, next) => {
+const obtenerEquipoDTO = async (req, res, next) => {
   try {
     const productSchema = object({
       id: number().required(),
@@ -11,4 +11,4 @@ const postEquipoDTO = async (req, res, next) => {
     res.status(400).json({ status: "fail", message: error.errors });
   }
 };
-export { postEquipoDTO };
+export { obtenerEquipoDTO };

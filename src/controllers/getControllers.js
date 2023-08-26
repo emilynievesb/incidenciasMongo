@@ -1,4 +1,8 @@
-import { obtenerEquipo, obtenerEquipos } from "../services/getServices.js";
+import {
+  obtenerEquipo,
+  obtenerEquipos,
+  obtenerIncidencias,
+} from "../services/getServices.js";
 
 const obtenerEquiposController = async (req, res, next) => {
   try {
@@ -17,4 +21,16 @@ const obtenerEquipoController = async (req, res, next) => {
     res.status(500).json(error.stack);
   }
 };
-export { obtenerEquiposController, obtenerEquipoController };
+const obtenerIncidenciasController = async (req, res, next) => {
+  try {
+    const incidencia = await obtenerIncidencias();
+    res.status(200).json(incidencia);
+  } catch (error) {
+    res.status(500).json(error.stack);
+  }
+};
+export {
+  obtenerEquiposController,
+  obtenerEquipoController,
+  obtenerIncidenciasController,
+};

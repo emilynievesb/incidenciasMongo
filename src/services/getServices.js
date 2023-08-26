@@ -1,4 +1,5 @@
 import { Equipo } from "../collections/equipo.js";
+import { Incidencia } from "../collections/incidencia.js";
 
 const obtenerEquipos = async () => {
   const equipo = new Equipo();
@@ -9,4 +10,9 @@ const obtenerEquipo = async (id) => {
   equipo.id_equipo = id;
   return await equipo.obtenerEquipo();
 };
-export { obtenerEquipos, obtenerEquipo };
+
+const obtenerIncidencias = async (id) => {
+  const incidencias = new Incidencia();
+  return await incidencias.obtenerIncidencias();
+};
+export { obtenerEquipos, obtenerEquipo, obtenerIncidencias };
