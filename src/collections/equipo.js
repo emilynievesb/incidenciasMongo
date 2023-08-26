@@ -2,6 +2,7 @@ import { connect, startTransaction } from "../utils/connect.js";
 import autoIncrementID from "../utils/counters.js";
 
 class Equipo {
+  id_equipo;
   id_tipo_equipo;
   serial_equipo;
   id_sala;
@@ -47,6 +48,63 @@ class Equipo {
       const connection = await this.connect();
       const resultado = await connection
         .aggregate([
+          {
+            $lookup: {
+              from: "tipos_equipos",
+              localField: "id_tipo_equipo",
+              foreignField: "id_tipo_equipo",
+              as: "tipo_equipo",
+            },
+          },
+          {
+            $lookup: {
+              from: "salas",
+              localField: "id_sala",
+              foreignField: "id_sala",
+              as: "sala",
+            },
+          },
+          {
+            $unwind: "$tipo_equipo",
+          },
+          {
+            $unwind: "$sala",
+          },
+          {
+            $project: {
+              _id: 0,
+              id_equipo: 1,
+              serial_equipo: 1,
+              tipo_equipo: "$tipo_equipo.nombre_equipo",
+              sala: "$sala.nombre_sala",
+            },
+          },
+        ])
+        .toArray();
+      await this.session.commitTransaction();
+      return resultado;
+    } catch (error) {
+      if (this.session) {
+        await this.session.abortTransaction();
+      }
+      throw error;
+    } finally {
+      if (this.session) {
+        this.session.endSession();
+      }
+    }
+  }
+  async obtenerEquipo() {
+    try {
+      this.session = await startTransaction();
+      const connection = await this.connect();
+      const resultado = await connection
+        .aggregate([
+          {
+            $match: {
+              id_equipo: Number(this.id_equipo),
+            },
+          },
           {
             $lookup: {
               from: "tipos_equipos",

@@ -1,9 +1,13 @@
 import { Router } from "express";
-import { obtenerEquiposController } from "../controllers/getControllers.js";
+import {
+  obtenerEquipoController,
+  obtenerEquiposController,
+} from "../controllers/getControllers.js";
 
 const getInitRoute = () => {
   const router = Router();
   router.get("/obtenerEquipos", obtenerEquiposController);
+  router.get("/obtenerEquipo", obtenerEquipoController);
   return router;
 };
 
