@@ -662,7 +662,7 @@ db.createCollection("incidencias", {
     },
   },
 });
-db.insidencias.insertMany([
+db.incidencias.insertMany([
   {
     id_incidencia: siguienteId("incidencias"),
     id_trainer: 1,
