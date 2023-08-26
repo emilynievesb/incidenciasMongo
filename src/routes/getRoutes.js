@@ -2,15 +2,21 @@ import { Router } from "express";
 import {
   obtenerEquipoController,
   obtenerEquiposController,
+  obtenerIncidenciaController,
   obtenerIncidenciasController,
 } from "../controllers/getControllers.js";
-import { obtenerEquipoDTO } from "./DTO/getDTO.js";
+import { obtenerEquipoDTO, obtenerIncidenciaDTO } from "./DTO/getDTO.js";
 
 const getInitRoute = () => {
   const router = Router();
   router.get("/obtenerEquipos", obtenerEquiposController);
   router.get("/obtenerEquipo", obtenerEquipoDTO, obtenerEquipoController);
   router.get("/obtenerIncidencias", obtenerIncidenciasController);
+  router.get(
+    "/obtenerIncidencia",
+    obtenerIncidenciaDTO,
+    obtenerIncidenciaController
+  );
   return router;
 };
 

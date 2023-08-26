@@ -11,8 +11,13 @@ const obtenerEquipo = async (id) => {
   return await equipo.obtenerEquipo();
 };
 
-const obtenerIncidencias = async (id) => {
+const obtenerIncidencias = async () => {
   const incidencias = new Incidencia();
   return await incidencias.obtenerIncidencias();
 };
-export { obtenerEquipos, obtenerEquipo, obtenerIncidencias };
+const obtenerIncidencia = async (id) => {
+  const incidencias = new Incidencia();
+  incidencias.id_incidencia = id;
+  return await incidencias.obtenerIncidencia();
+};
+export { obtenerEquipos, obtenerEquipo, obtenerIncidencias, obtenerIncidencia };
