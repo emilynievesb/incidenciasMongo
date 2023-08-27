@@ -7,7 +7,12 @@ class Equipo {
   serial_equipo;
   id_sala;
   session;
-  constructor() {}
+  constructor() {
+    this.id_equipo = 12;
+    this.id_tipo_equipo = 1;
+    this.serial_equipo = "AS123C";
+    this.id_sala = 1;
+  }
   async connect() {
     try {
       const result = await connect("equipos");

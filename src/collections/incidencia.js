@@ -9,7 +9,15 @@ class Incidencia {
   id_tipo_incidencia;
   descripcion;
   fecha_incidencia;
-  constructor() {}
+  constructor() {
+    this.id_incidencia = 4;
+    this.id_trainer = 5;
+    this.id_equipo = 2;
+    this.id_categoria_incidencia = 5;
+    this.id_tipo_incidencia = 1;
+    this.descripcion = "Descripción";
+    this.fecha_incidencia = new Date("2023-10-15");
+  }
   async connect() {
     try {
       const result = await connect("incidencias");

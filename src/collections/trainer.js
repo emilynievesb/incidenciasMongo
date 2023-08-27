@@ -10,7 +10,16 @@ class Trainer {
   telefono_residencia;
   telefono_empresa;
   telefono_movil_empresarial;
-  constructor() {}
+  constructor() {
+    this.id_trainer = 1;
+    this.nombre_trainer = "Nombre";
+    this.email_personal = "emilt@gmail.com";
+    this.email_corporativo = "emily12@gmail.com";
+    this.telefono_movil = 31115151;
+    this.telefono_residencia = 96632210;
+    this.telefono_empresa = 6465110;
+    this.telefono_movil_empresarial = 87421000;
+  }
   async connect() {
     try {
       const result = await connect("trainers");

@@ -12,6 +12,7 @@ import {
 import { limitPets, limitSize } from "../utils/limit.js";
 import {
   authorizationMiddleware,
+  contentMiddlewareEquipo,
   contentMiddlewareIncidencia,
   contentMiddlewareTrainer,
 } from "../utils/collectionAuth.js";

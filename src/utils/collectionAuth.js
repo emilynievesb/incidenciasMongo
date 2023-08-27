@@ -3,9 +3,9 @@ import { plainToClass, classToPlain } from "class-transformer";
 import dotenv from "dotenv";
 import { Router } from "express";
 import { SignJWT, jwtVerify } from "jose";
-import { Incidencia } from "../collections/incidencia";
-import { Equipo } from "../collections/equipo";
-import { Trainer } from "../collections/trainer";
+import { Incidencia } from "../collections/incidencia.js";
+import { Equipo } from "../collections/equipo.js";
+import { Trainer } from "../collections/trainer.js";
 
 dotenv.config();
 const appToken = Router();
