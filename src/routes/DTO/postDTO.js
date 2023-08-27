@@ -40,47 +40,10 @@ const postTrainerDTO = async (req, res, next) => {
         .required(),
       emailPersonal: string().required(),
       emailCorporativo: string().required(),
-      telefonoMovil: number()
-        .required()
-        .test("length", "El teléfono movil debe tener 10 dígitos", (value) => {
-          if (!value) return true; // Si el campo está vacío, no realizar la validación
-          const numberString = String(value);
-          return numberString.length === 10;
-        }),
-      telfonoResidencia: number()
-        .required()
-        .test(
-          "length",
-          "El telefono de la residencia debe tener 10 dígitos",
-          (value) => {
-            if (!value) return true; // Si el campo está vacío, no realizar la validación
-            const numberString = String(value);
-            return numberString.length === 10;
-          }
-        ),
-      telefonoEmpresa: number()
-        .strict()
-        .required()
-        .test(
-          "length",
-          "El telefono de la empresa debe tener 10 dígitos",
-          (value) => {
-            if (!value) return true; // Si el campo está vacío, no realizar la validación
-            const numberString = String(value);
-            return numberString.length === 10;
-          }
-        ),
-      telefonoMovilEmpresa: number()
-        .required()
-        .test(
-          "length",
-          "El telefono movil de la empresa debe tener 10 dígitos",
-          (value) => {
-            if (!value) return true; // Si el campo está vacío, no realizar la validación
-            const numberString = String(value);
-            return numberString.length === 10;
-          }
-        ),
+      telefonoMovil: string().required(),
+      telfonoResidencia: string().required(),
+      telefonoEmpresa: string().required(),
+      telefonoMovilEmpresa: string().required(),
     });
     await productSchema.validate(req.body);
     next();
