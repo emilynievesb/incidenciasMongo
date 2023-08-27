@@ -26,10 +26,16 @@ const obtenerTrainers = async () => {
   const trainer = new Trainer();
   return await trainer.obtenerTrainers();
 };
+const obtenerTrainer = async (id) => {
+  const trainer = new Trainer();
+  trainer.id_trainer = id;
+  return await trainer.obtenerTrainer();
+};
 export {
   obtenerEquipos,
   obtenerEquipo,
   obtenerIncidencias,
   obtenerIncidencia,
   obtenerTrainers,
+  obtenerTrainer,
 };

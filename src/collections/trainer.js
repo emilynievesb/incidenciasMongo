@@ -57,5 +57,17 @@ class Trainer {
       throw error;
     }
   }
+
+  async obtenerTrainer() {
+    try {
+      const connection = await this.connect();
+      const resultado = await connection.findOne({
+        id_trainer: Number(this.id_trainer),
+      });
+      return resultado;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export { Trainer };
