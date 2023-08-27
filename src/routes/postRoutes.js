@@ -2,8 +2,13 @@ import { Router } from "express";
 import {
   postEquipoController,
   postIncidenciaController,
+  postTrainerController,
 } from "../controllers/postControllers.js";
-import { postEquipoDTO, postIncidenciaDTO } from "./DTO/postDTO.js";
+import {
+  postEquipoDTO,
+  postIncidenciaDTO,
+  postTrainerDTO,
+} from "./DTO/postDTO.js";
 
 const postInitRoute = () => {
   const router = Router();
@@ -13,6 +18,7 @@ const postInitRoute = () => {
     postIncidenciaDTO,
     postIncidenciaController
   );
+  router.post("/agregarTrainer", postTrainerController);
   return router;
 };
 

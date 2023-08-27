@@ -1,5 +1,6 @@
 import { Equipo } from "../collections/equipo.js";
 import { Incidencia } from "../collections/incidencia.js";
+import { Trainer } from "../collections/trainer.js";
 
 const postIncidencia = async (
   id_trainer,
@@ -33,4 +34,27 @@ const postEquipo = async (id_tipo_equipo, serial_equipo, id_sala) => {
   }
 };
 
-export { postEquipo, postIncidencia };
+const postTrainer = async (
+  nombre_trainer,
+  email_personal,
+  email_corporativo,
+  telefono_movil,
+  telefono_residencia,
+  telefono_empresa,
+  telefono_movil_empresarial
+) => {
+  const trainer = new Trainer();
+  trainer.nombre_trainer = nombre_trainer;
+  trainer.email_personal = email_personal;
+  trainer.email_corporativo = email_corporativo;
+  trainer.telefono_movil = telefono_movil;
+  trainer.telefono_residencia = telefono_residencia;
+  trainer.telefono_empresa = telefono_empresa;
+  trainer.telefono_movil_empresarial = telefono_movil_empresarial;
+  const res = await trainer.agregarTrainer();
+  if (res.insertedId) {
+    return "Trainer agregado con éxito";
+  }
+};
+
+export { postEquipo, postIncidencia, postTrainer };
