@@ -1,5 +1,6 @@
 import { Equipo } from "../collections/equipo.js";
 import { Incidencia } from "../collections/incidencia.js";
+import { Trainer } from "../collections/trainer.js";
 
 const obtenerEquipos = async () => {
   const equipo = new Equipo();
@@ -20,4 +21,15 @@ const obtenerIncidencia = async (id) => {
   incidencias.id_incidencia = id;
   return await incidencias.obtenerIncidencia();
 };
-export { obtenerEquipos, obtenerEquipo, obtenerIncidencias, obtenerIncidencia };
+
+const obtenerTrainers = async () => {
+  const trainer = new Trainer();
+  return await trainer.obtenerTrainers();
+};
+export {
+  obtenerEquipos,
+  obtenerEquipo,
+  obtenerIncidencias,
+  obtenerIncidencia,
+  obtenerTrainers,
+};

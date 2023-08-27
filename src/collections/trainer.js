@@ -48,5 +48,14 @@ class Trainer {
       }
     }
   }
+  async obtenerTrainers() {
+    try {
+      const connection = await this.connect();
+      const resultado = await connection.find({}).toArray();
+      return resultado;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 export { Trainer };

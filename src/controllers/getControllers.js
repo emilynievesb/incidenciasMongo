@@ -3,6 +3,7 @@ import {
   obtenerEquipos,
   obtenerIncidencia,
   obtenerIncidencias,
+  obtenerTrainers,
 } from "../services/getServices.js";
 
 const obtenerEquiposController = async (req, res, next) => {
@@ -39,9 +40,18 @@ const obtenerIncidenciaController = async (req, res, next) => {
     res.status(500).json(error.stack);
   }
 };
+const obtenerTrainersController = async (req, res, next) => {
+  try {
+    const trainers = await obtenerTrainers();
+    res.status(200).json(trainers);
+  } catch (error) {
+    res.status(500).json(error.stack);
+  }
+};
 export {
   obtenerEquiposController,
   obtenerEquipoController,
   obtenerIncidenciasController,
   obtenerIncidenciaController,
+  obtenerTrainersController,
 };

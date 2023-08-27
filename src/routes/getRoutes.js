@@ -4,6 +4,7 @@ import {
   obtenerEquiposController,
   obtenerIncidenciaController,
   obtenerIncidenciasController,
+  obtenerTrainersController,
 } from "../controllers/getControllers.js";
 import { obtenerEquipoDTO, obtenerIncidenciaDTO } from "./DTO/getDTO.js";
 
@@ -17,6 +18,7 @@ const getInitRoute = () => {
     obtenerIncidenciaDTO,
     obtenerIncidenciaController
   );
+  router.get("/obtenerTrainers", obtenerTrainersController);
   return router;
 };
 
