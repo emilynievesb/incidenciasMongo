@@ -31,6 +31,10 @@ Para ejecutar correctamente el servidor debes asegurarte de tener `nodemon`, ya 
 
         npm run dev
 
+## Autorización
+
+Para ejecutar correctamente los endpoints, debes obtener el token de cada tabla antes de hacer la consulta, por lo que en el apartado de los endpoints dejaremos escrita la url a ejecutar antes, y debes copiar el token en el header de autorización.
+
 ## Endpoints
 
 Para este proyecto se desarrollaron los siguiente endpoints diseñados para manipular la base de datos esperando los parametros por el body de la petición.
@@ -39,8 +43,9 @@ RECUERDA QUE LA IP DEL SERVIDOR SERÁ LA CORRESPONDIENTE EN EL ARCHIVO `.env` de
 
 Los datos acontinuación son netamente ejemplos de lo que podrían contener los datos de entrada.
 
-1.  Agregar insidencias
+1.  Agregar incidencias
 
+    - Authorization: `http://127.20.20.1:5000/api/token/incidencia`
     - URL: `http://127.20.30.1:5005/api/post/agregarInsidencia`
     - Método: `POST`
     - Datos de entrada (body):
@@ -48,18 +53,19 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
       {
             "trainer":3,
             "idEquipo":30,
-            "idCategoriaInsidencia":1,
+            "idCategoriaIncidencia":1,
             "idTipoInsidencia":3,
             "descripcion":"Equipo dañado",
-            "fechaInsidencia":"2023-06-10"
+            "fechaIncidencia":"2023-06-10"
       }
       ```
     - Datos de salida:
 
-            "Insidencia agregada con éxito"
+            "Incidencia agregada con éxito"
 
 1.  Agregar equipos
 
+    - Authorization: `http://127.20.20.1:5000/api/token/equipo`
     - URL: `http://127.20.30.1:5005/api/post/agregarEquipo`
     - Método: `POST`
     - Datos de entrada (body):
@@ -76,6 +82,7 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
 
 1.  Agregar trainers
 
+    - Authorization: `http://127.20.20.1:5000/api/token/trainer`
     - URL: `http://127.20.30.1:5005/api/post/agregarEquipo`
     - Método: `POST`
     - Datos de entrada (body):
@@ -98,6 +105,7 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
 
 1.  Obtener trainer
 
+    - Authorization: `http://127.20.20.1:5000/api/token/trainer`
     - URL: `http://127.20.30.1:5005/api/get/obtenerTrainer?id=1`
     - Método: `GET`
     - Datos de entrada (body): Ninguno
@@ -119,6 +127,7 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
 
 1.  Obtener trainers
 
+    - Authorization: `http://127.20.20.1:5000/api/token/trainer`
     - URL: `http://127.20.30.1:5005/api/get/obtenerTrainers`
     - Método: `GET`
     - Datos de entrada (body): Ninguno
@@ -186,6 +195,7 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
 
 1.  Obtener equipo
 
+    - Authorization: `http://127.20.20.1:5000/api/token/equipo`
     - URL: `http://127.20.30.1:5005/api/get/obtenerEquipo?id=1`
     - Método: `GET`
     - Datos de entrada (body): Ninguno
@@ -204,6 +214,7 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
 
 1.  Obtener equipos
 
+    - Authorization: `http://127.20.20.1:5000/api/token/equipo`
     - URL: `http://127.20.30.1:5005/api/get/obtenerEquipos`
     - Método: `GET`
     - Datos de entrada (body): Ninguno
@@ -240,6 +251,7 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
 
 1.  Obtener incidencia
 
+    - Authorization: `http://127.20.20.1:5000/api/token/incidencia`
     - URL: `http://127.20.30.1:5005/api/get/obtenerIncidencia?id=1`
     - Método: `GET`
     - Datos de entrada (body): Ninguno
@@ -259,6 +271,7 @@ Los datos acontinuación son netamente ejemplos de lo que podrían contener los 
 
 1.  Obtener incidencias
 
+    - Authorization: `http://127.20.20.1:5000/api/token/incidencia`
     - URL: `http://127.20.30.1:5005/api/get/obtenerIncidencias`
     - Método: `GET`
     - Datos de entrada (body): Ninguno
