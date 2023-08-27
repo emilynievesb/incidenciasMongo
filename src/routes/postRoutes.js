@@ -10,6 +10,11 @@ import {
   postTrainerDTO,
 } from "./DTO/postDTO.js";
 import { limitPets, limitSize } from "../utils/limit.js";
+import {
+  authorizationMiddleware,
+  contentMiddlewareIncidencia,
+  contentMiddlewareTrainer,
+} from "../utils/collectionAuth.js";
 
 const postInitRoute = () => {
   const router = Router();
@@ -17,6 +22,8 @@ const postInitRoute = () => {
     "/agregarEquipo",
     limitPets,
     limitSize,
+    authorizationMiddleware,
+    contentMiddlewareEquipo,
     postEquipoDTO,
     postEquipoController
   );
@@ -24,6 +31,8 @@ const postInitRoute = () => {
     "/agregarIncidencia",
     limitPets,
     limitSize,
+    authorizationMiddleware,
+    contentMiddlewareIncidencia,
     postIncidenciaDTO,
     postIncidenciaController
   );
@@ -31,6 +40,8 @@ const postInitRoute = () => {
     "/agregarTrainer",
     limitPets,
     limitSize,
+    authorizationMiddleware,
+    contentMiddlewareTrainer,
     postTrainerDTO,
     postTrainerController
   );
