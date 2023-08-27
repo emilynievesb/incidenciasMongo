@@ -9,16 +9,31 @@ import {
   postIncidenciaDTO,
   postTrainerDTO,
 } from "./DTO/postDTO.js";
+import { limitPets, limitSize } from "../utils/limit.js";
 
 const postInitRoute = () => {
   const router = Router();
-  router.post("/agregarEquipo", postEquipoDTO, postEquipoController);
+  router.post(
+    "/agregarEquipo",
+    limitPets,
+    limitSize,
+    postEquipoDTO,
+    postEquipoController
+  );
   router.post(
     "/agregarIncidencia",
+    limitPets,
+    limitSize,
     postIncidenciaDTO,
     postIncidenciaController
   );
-  router.post("/agregarTrainer", postTrainerController);
+  router.post(
+    "/agregarTrainer",
+    limitPets,
+    limitSize,
+    postTrainerDTO,
+    postTrainerController
+  );
   return router;
 };
 
